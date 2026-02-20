@@ -27,8 +27,9 @@ export default function RevenueByCategory({ className }: { className?: string })
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip formatter={(value: any, name: string) => {
-                        let label = name[0].toUpperCase() + name.slice(1);
+                    <Tooltip formatter={(value: any, name: any) => {
+                        if (!name) return [value, name];
+                        let label = String(name)[0].toUpperCase() + String(name).slice(1);
                         return name === 'consultations' ? [`$ ${value}`, label] : [value, label];
                     }} />
                     <Legend />

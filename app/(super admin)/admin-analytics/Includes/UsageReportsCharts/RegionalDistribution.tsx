@@ -46,7 +46,7 @@ const renderCustomizedLabel = ({
     );
 };
 
-export default function RegionalDistribution({className}:{className?:string}) {
+export default function RegionalDistribution({ className }: { className?: string }) {
     return (
         <div className={`w-full h-full ${className}`}>
             <ResponsiveContainer>
@@ -66,7 +66,7 @@ export default function RegionalDistribution({className}:{className?:string}) {
                             <Cell key={`cell-${index}`} fill={COLORS[index]} />
                         ))}
                     </Pie>
-                    <Tooltip formatter={(value: number) => `${value}%`} />
+                    <Tooltip formatter={(value: any) => `${value}%`} />
                 </PieChart>
             </ResponsiveContainer>
         </div>
