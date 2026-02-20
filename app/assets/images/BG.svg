@@ -1,0 +1,27 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line x1="713.805" y1="-23.2812" x2="713.805" y2="818.764" stroke="black" stroke-opacity="0.05"/>
+<line y1="-0.5" x2="936.608" y2="-0.5" transform="matrix(0.485187 0.87441 -0.919097 0.394031 791.051 -23.2793)" stroke="black" stroke-opacity="0.05"/>
+<line y1="-0.5" x2="936.608" y2="-0.5" transform="matrix(0.485187 -0.87441 -0.919097 -0.394031 209.926 741.963)" stroke="black" stroke-opacity="0.05"/>
+<line y1="-0.5" x2="581.622" y2="-0.5" transform="matrix(0.860179 0.509992 -0.608778 0.79334 951.062 -23.2793)" stroke="black" stroke-opacity="0.05"/>
+<line y1="-0.5" x2="581.622" y2="-0.5" transform="matrix(0.860179 -0.509992 -0.608778 -0.79334 -10.5 263.844)" stroke="black" stroke-opacity="0.05"/>
+<line y1="-0.5" x2="733.693" y2="-0.5" transform="matrix(0.751087 0.660203 -0.751087 0.660203 868.99 -23.2793)" stroke="black" stroke-opacity="0.05"/>
+<line y1="-0.5" x2="733.693" y2="-0.5" transform="matrix(0.751087 -0.660203 -0.751087 -0.660203 6.2793 459.922)" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="9.17383" x2="1620" y2="9.17383" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="23.498" x2="1620" y2="23.498" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="39.9043" x2="1620" y2="39.9043" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="59.6484" x2="1620" y2="59.6484" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="82.4551" x2="1620" y2="82.4551" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="109.709" x2="1620" y2="109.709" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="142.523" x2="1620" y2="142.523" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="184.1" x2="1620" y2="184.1" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="235.549" x2="1620" y2="235.549" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="307.781" x2="1620" y2="307.781" stroke="black" stroke-opacity="0.05"/>
+<line x1="-180" y1="415.588" x2="1620" y2="415.588" stroke="black" stroke-opacity="0.05"/>
+<rect x="-180" y="-117" width="1800" height="1017" fill="url(#paint0_linear_55_186)" fill-opacity="0.5"/>
+<defs>
+<linearGradient id="paint0_linear_55_186" x1="720" y1="-117" x2="720" y2="900" gradientUnits="userSpaceOnUse">
+<stop stop-color="#0E0F11" stop-opacity="0"/>
+<stop offset="1" stop-color="white"/>
+</linearGradient>
+</defs>
+</svg>
