@@ -6,7 +6,7 @@ import { Check, Lock, Mail, MessageCircleCode } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 import { z } from "zod";
@@ -231,4 +231,10 @@ function ForgotPassword() {
     
 }
 
-export default ForgotPassword
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ForgotPassword />
+    </Suspense>
+  );
+}
