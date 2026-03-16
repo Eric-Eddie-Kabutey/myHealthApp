@@ -1,207 +1,289 @@
 'use client';
 
-import routes from '@/lib/routes';
-import { Link } from 'lucide-react';
-import React from 'react'
+// File: components/Header/Includes/IndividualMenuContent.tsx
+// Active row: inset left border + box shadow card lift + triangle faces LEFT into col1
+// Triangle top tracks mouse position in real-time via triangleTop state
 
+import React, { useRef, useState } from 'react';
+
+const GREEN     = '#34765A';
+const ACTIVE_BG = '#e8f5ee';
+const COL3_BG   = '#f1f3f9';
+const PROMO_BG  = '#1b4535';
+
+// ─── SVG icons per item ───────────────────────────────────────────────────────
+const icons: Record<string, React.ReactNode> = {
+    '24/7 Care': (
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+    ),
+    'Mental Health': (
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+    ),
+    'Weight Management': (
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+        </svg>
+    ),
+    'Diabetes Management': (
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+    ),
+    'Hypertension Management': (
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+    ),
+    'Specialty & Wellness': (
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+    ),
+    'Primary Care': (
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+    ),
+};
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const items = [
     {
-        img: 'https://images.unsplash.com/photo-1519494026892-80bbd0e61b8c?auto=format&fit=crop&w=64&q=80',
         name: '24/7 Care',
-        link: '/247care',
         description: 'Skip the trip and get same-day care for common conditions.',
         services: [
-            {
-                name: 'Overview',
-                link: '/247care',
-            },
-            {
-                name: (
-                    <span className='flex items-center gap-2'>
-                        Get Care{' '}
-                        <Link className='size-4' />
-                    </span>
-                ),
-                link: routes.signup,
-            },
+            { name: 'Overview',     link: '/247care',  external: false },
+            { name: 'Get Care Now', link: '/register', external: true  },
         ],
     },
     {
-        img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=64&q=80',
         name: 'Mental Health',
-        link: '/mental-health',
-        description: 'Support for anxiety, depression, and more.',
+        description: 'Find therapy that works best for you.',
         services: [
-            {
-                name: 'Overview',
-                link: '/mental-health',
-            },
+            { name: 'Overview',   link: '/mental-health',            external: false },
+            { name: 'BetterHelp', link: '/mental-health/betterhelp', external: true  },
         ],
     },
     {
-        img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=64&q=80',
         name: 'Weight Management',
-        link: '/condition-management',
-        description: 'Personalized plans to help you reach your goals.',
+        description: 'Weight loss and healthy living tailored to you.',
         services: [
-            {
-                name: 'Overview',
-                link: '/condition-management',
-            },
-            {
-                name: 'Diabetes Prevention',
-                link: '/condition-management/diabetes-prevention',
-            },
+            { name: 'Overview',                     link: '/weight-management',                     external: false },
+            { name: 'Diabetes Prevention',           link: '/weight-management/diabetes-prevention', external: false },
+            { name: 'GLP-1 Prescription & Support',  link: '/weight-management/glp1',                external: false },
+            { name: 'Nutrition',                     link: '/weight-management/nutrition',            external: false },
         ],
     },
     {
-        img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=64&q=80',
         name: 'Diabetes Management',
-        link: '/condition-management/diabetes-prevention',
-        description: 'Comprehensive care for diabetes.',
+        description: 'A personalized way to manage and prevent diabetes.',
         services: [
-            {
-                name: 'Overview',
-                link: '/condition-management/diabetes-prevention',
-            },
+            { name: 'Overview',            link: '/diabetes-management',            external: false },
+            { name: 'Diabetes Prevention', link: '/diabetes-management/prevention', external: false },
         ],
     },
     {
-        img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=64&q=80',
         name: 'Hypertension Management',
-        link: '/condition-management/hypertension',
-        description: 'Manage high blood pressure with expert support.',
+        description: 'Lowering your blood pressure just got easier.',
         services: [
-            {
-                name: 'Overview',
-                link: '/condition-management/hypertension',
-            },
+            { name: 'Overview', link: '/hypertension-management', external: false },
         ],
     },
     {
-        img: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=64&q=80',
         name: 'Specialty & Wellness',
-        link: '/specialty-wellness',
-        description: 'Specialty care and wellness services.',
+        description: "Skin issues? Meal planning? Or need a second opinion? We've got you covered.",
         services: [
-            {
-                name: 'Overview',
-                link: '/specialty-wellness',
-            },
-            {
-                name: 'Dermatology',
-                link: '/specialty-wellness/dermatology',
-            },
-            {
-                name: 'Expert Medical Options',
-                link: '/specialty-wellness/medical-options',
-            },
+            { name: 'Overview',               link: '/specialty-wellness',                 external: false },
+            { name: 'Dermatology',            link: '/specialty-wellness/dermatology',     external: false },
+            { name: 'Expert Medical Opinion', link: '/specialty-wellness/medical-experts', external: false },
+            { name: 'BetterSleep — Try for $0', link: '/specialty-wellness/bettersleep',  external: true  },
         ],
     },
     {
-        img: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=64&q=80',
         name: 'Primary Care',
-        link: '/primary-care',
-        description: 'Your partner for ongoing health needs.',
+        description: 'Looking for convenient, high-quality primary care? Welcome.',
         services: [
-            {
-                name: 'Overview',
-                link: '/primary-care',
-            },
+            { name: 'Overview', link: '/primary-care', external: false },
         ],
     },
 ];
 
 const exploreItems = [
-    { name: 'Care Without Insurance', link: '/care-without-insurance' },
-    { name: 'How It Works', link: '/how-it-works' },
-    { name: 'Medicare', link: '/medicare' },
-    { name: 'Medicaid', link: '/medicaid' },
-    { name: 'FAQs', link: '/faqs' },
-    { name: 'About Us', link: '/about-us' },
-    { name: 'Our Impact', link: '/our-impact' },
-    { name: 'Teladoc Health Library', link: '/teladoc-health-library' },
-    { name: 'Health Talk Blog', link: '/health-talk-blog' },
-    { name: 'Contact Us', link: '/contact-us' },
-]
+    { name: 'Care Without Insurance',  link: '/care-without-insurance' },
+    { name: 'How It Works',            link: '/how-it-works' },
+    { name: 'Medicare',                link: '/medicare' },
+    { name: 'Medicaid',                link: '/medicaid' },
+    { name: 'FAQs',                    link: '/faqs' },
+    { name: 'About Us',                link: '/about' },
+    { name: 'Our Impact',              link: '/about/our-impact' },
+    { name: 'Teladoc Health Library',  link: '/library' },
+    { name: 'Contact Us',              link: '/contact' },
+];
 
+// Small external link icon
+const ExtIcon = () => (
+    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ flexShrink: 0, color: '#9ca3af' }}>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+    </svg>
+);
+
+// ─── Component ────────────────────────────────────────────────────────────────
 function IndividualMenuContent() {
-    const [active, setActive] = React.useState<string | null>(`24/7 Care`);
+    const [active, setActive]           = useState('24/7 Care');
+    const [triangleTop, setTriangleTop] = useState(24);
+    const col1Ref = useRef<HTMLElement>(null);
+
+    const activeItem = items.find(i => i.name === active);
+
+    // Track mouse Y within the column for smooth triangle following
+    const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+        if (col1Ref.current) {
+            const colTop = col1Ref.current.getBoundingClientRect().top;
+            // Clamp triangle within column bounds
+            const raw = e.clientY - colTop;
+            const clamped = Math.max(16, Math.min(raw, col1Ref.current.offsetHeight - 16));
+            setTriangleTop(clamped);
+        }
+    };
+
+    const handleHover = (name: string) => {
+        setActive(name);
+    };
+
     return (
-        <div className='main-content w-full sm:shadow flex lg:grid grid-cols-4 gap-8 p-6 overflow-y-auto bg-white border-t-0 border-b-2 border-indigo-950'>
-            {/* Ways We Help Section */}
-            <section className="min-w-fit sm:min-w-[240px] md:w-full text-nowrap h-full flex flex-col gap-4 overflow-y-auto">
-                <h3 className="sm:text-lg font-semibold text-gray-900">Ways We Help</h3>
-                <div className="flex h-full flex-col gap-2">
-                    {items.map((item, index) => (
-                        <>
-                            <div onMouseEnter={() => setActive(item.name)} key={index} className={`flex items-center gap-3 p-2 hover:bg-gray-50 ${active === item.name ? 'bg-gray-100' : ''} rounded-lg cursor-pointer group`}>
-                                <div className="w-8 h-8 min-w-8 rounded-full overflow-hidden sm:block hidden">
-                                    <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
-                                </div>
-                                <div className="flex flex-col sm:flex-1">
-                                    <span className="text-sm min-w-fit sm:min-w-auto font-medium text-gray-900 group-hover:text-blue-600">
-                                        {item.name}
-                                    </span>
-                                </div>
-                                <svg className="w-4 h-4 text-gray-400 group-hover:text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
+        <div className="w-full grid grid-cols-4" style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}>
+
+            {/* ── COL 1: Ways We Help ── */}
+            <section
+                ref={col1Ref}
+                className="relative py-5 bg-white border-r border-gray-100"
+                style={{ boxShadow: '6px 0 20px -5px rgba(0,0,0,0.12)', zIndex: 1 }}
+                // Mouse move on the whole column keeps triangle following cursor
+                onMouseMove={handleMouseMove}
+            >
+                <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-2 px-4">
+                    Ways We Help
+                </p>
+
+                {items.map((item) => {
+                    const isActive = active === item.name;
+                    return (
+                        <button
+                            key={item.name}
+                            onMouseEnter={() => handleHover(item.name)}
+                            className="w-full text-left px-4 transition-all duration-100 flex items-center"
+                            style={{
+                                // Active row is taller + has card-shadow lift
+                                padding:    isActive ? '11px 16px' : '9px 16px',
+                                background: isActive ? ACTIVE_BG  : 'transparent',
+                                color:      isActive ? GREEN      : '#14161a',
+                                fontSize:   '13.5px',
+                                fontWeight: 600,
+                                // Inset left green bar + right-side shadow bleed into col2
+                                boxShadow:  isActive
+                                    ? 'inset 3px 0 0 #34765A, 4px 0 16px -2px rgba(52,118,90,0.22)'
+                                    : 'none',
+                            }}
+                        >
+                            {/* Icon circle — deeper green when active */}
+                            <div
+                                style={{
+                                    width: 32, height: 32,
+                                    borderRadius: '50%',
+                                    background: isActive ? '#bbf7d0' : '#f0fdf4',
+                                    color:      isActive ? GREEN     : '#16a34a',
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    marginRight: 12, flexShrink: 0,
+                                    transition: 'background 0.1s',
+                                }}
+                            >
+                                {icons[item.name]}
                             </div>
-                            <section className='w-full sm:hidden '>
-                                {(active && active === item.name) && (
-                                    <div className="w-full flex flex-col gap-2 pl-4">
-                                        <div className="flex flex-col gap-2">
-                                            {items.find(item => item.name === active)?.services.map((service, idx) => (
-                                                <a
-                                                    key={idx}
-                                                    href={service.link}
-                                                    className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
-                                                >
-                                                    {service.name}
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-                            </section>
-                        </>
-                    ))}
-                </div>
+                            {item.name}
+                        </button>
+                    );
+                })}
+
+                {/* ── Triangle pointer — faces LEFT (points into col2) ──
+                    Positioned on RIGHT edge of col1, tip pointing rightward.
+                    SVG path draws triangle open to the right. */}
+                <svg
+                    viewBox="0 0 10 18"
+                    width="11"
+                    height="18"
+                    aria-hidden="true"
+                    style={{
+                        position:       'absolute',
+                        right:          -5,          // overlays the border pointing LEFT
+                        top:            triangleTop - 9, 
+                        pointerEvents:  'none',
+                        zIndex:         10,
+                        transition:     'top 0.15s cubic-bezier(0.22, 1, 0.36, 1)',
+                        filter:         'drop-shadow(-2px 0 4px rgba(0,0,0,0.1))', // shadow on the left now
+                    }}
+                >
+                    {/* Triangle points LEFT — pointing back into the list */}
+                    <path d="M10 0 L0 9 L10 18 Z" fill={ACTIVE_BG} />
+                </svg>
             </section>
 
-            {/* Services Section */}
-            <section className="w-fit min-[800px]:w-full hidden sm:flex flex-col gap-4">
-                <h3 className="text-lg font-semibold text-gray-900">Services</h3>
-                <div className="flex flex-col gap-3">
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                        Skip the trip and get same-day care for common conditions.
-                    </p>
-                    {active && (
-                        <div className="flex flex-col gap-2">
-                            {items.find(item => item.name === active)?.services.map((service, idx) => (
+            {/* ── COL 2: Services ── */}
+            <section className="py-5 px-6 bg-white">
+                <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-3">
+                    Services
+                </p>
+                {activeItem && (
+                    <div className="flex flex-col gap-3">
+                        <p className="text-[13px] text-gray-500 leading-relaxed">
+                            {activeItem.description}
+                        </p>
+                        <div className="flex flex-col gap-0.5 mt-1">
+                            {activeItem.services.map((s) => (
                                 <a
-                                    key={idx}
-                                    href={service.link}
-                                    className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                                    key={s.name}
+                                    href={s.link}
+                                    target={s.external ? '_blank' : undefined}
+                                    rel={s.external ? 'noopener noreferrer' : undefined}
+                                    className="flex items-center gap-1.5 py-1 transition-colors"
+                                    style={{ color: '#14161a', fontSize: '13.5px', fontWeight: 600 }}
+                                    onMouseEnter={e => (e.currentTarget.style.color = GREEN)}
+                                    onMouseLeave={e => (e.currentTarget.style.color = '#14161a')}
                                 >
-                                    {service.name}
+                                    {s.name}
+                                    {s.external && <ExtIcon />}
                                 </a>
                             ))}
                         </div>
-                    )}
-                </div>
+                    </div>
+                )}
             </section>
 
-            {/* Explore Section */}
-            <section className="w-full hidden min-[700px]:flex flex-col gap-4">
-                <h3 className="text-lg font-semibold text-gray-900">Explore</h3>
-                <div className="flex flex-col gap-2">
-                    {exploreItems.map((item, index) => (
+            {/* ── COL 3: Explore ── */}
+            <section className="py-5 px-6" style={{ background: COL3_BG }}>
+                <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-3">
+                    Explore
+                </p>
+                <div className="flex flex-col">
+                    {exploreItems.map((item) => (
                         <a
-                            key={index}
+                            key={item.name}
                             href={item.link}
-                            className="text-sm text-gray-700 hover:text-blue-600 hover:underline py-1"
+                            className="py-[7px] transition-colors"
+                            style={{ fontSize: '13.5px', fontWeight: 500, color: '#14161a' }}
+                            onMouseEnter={e => (e.currentTarget.style.color = GREEN)}
+                            onMouseLeave={e => (e.currentTarget.style.color = '#14161a')}
                         >
                             {item.name}
                         </a>
@@ -209,11 +291,29 @@ function IndividualMenuContent() {
                 </div>
             </section>
 
-            <section className="w-full h-full hidden lg:flex rounded-2xl overflow-hidden">
-                <img src={items.find(item => item.name === active)?.img} alt="featured" className="size-full object-cover" />
+            {/* ── COL 4: Promo ── */}
+            <section className="flex flex-col overflow-hidden" style={{ background: PROMO_BG }}>
+                <div
+                    className="w-full h-44 bg-cover bg-center"
+                    style={{ backgroundImage: `url(https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80)` }}
+                />
+                <div className="flex flex-col gap-4 p-5 flex-1">
+                    <h3 className="text-white font-bold text-[15px] leading-snug">
+                        Stop racing thoughts and start sleeping better
+                    </h3>
+                    <a
+                        href="/wellness/sleep"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-white text-[13px] font-semibold hover:underline mt-auto"
+                    >
+                        Try RiciaSleep — 30 days for $0
+                        <ExtIcon />
+                    </a>
+                </div>
             </section>
         </div>
-    )
+    );
 }
 
-export default IndividualMenuContent
+export default IndividualMenuContent;

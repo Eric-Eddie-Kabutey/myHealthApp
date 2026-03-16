@@ -1,3 +1,7 @@
+/* File: app/globals.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -76,6 +80,12 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+
+  /* ── Header / Nav brand tokens ── */
+  --nav-purple: #6240E8;
+  --nav-purple-dark: #351F65;
+  --nav-text: #14161a;
+  --nav-col3-bg: #f1f3f9;  /* slightly blue-gray for Explore column */
 }
 
 .dark {
@@ -107,7 +117,7 @@
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
   --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
+  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
@@ -121,114 +131,79 @@
   }
 }
 
+/* ── Global font — Raleway replaces Effra (same weight/feel) ── */
 body {
-  /* color: var(--foreground);
-  background: var(--background); */
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Raleway', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Header nav links use Raleway too ── */
+.header-nav-link {
+  font-family: 'Raleway', system-ui, sans-serif;
 }
 
 * {
   scroll-behavior: smooth;
-  scrollbar-width: 0;
+  scrollbar-width: none; /* fixed: was 0 which is invalid */
 }
 
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   display: none;
 }
 
-
-button{
+button {
   cursor: pointer;
 }
 
+/* ── Page entry animations ── */
 .main-content {
   animation: slide-up 0.5s ease-out;
 }
 
 @keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── Header dropdown slide-down (fast, subtle — 0.18s not 0.5s) ── */
 @keyframes slid-down {
-  from {
-    opacity: 0;
-    transform: translateY(-24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .slid-down {
-  animation: slid-down 0.5s ease-out;
+  animation: slid-down 0.18s ease-out forwards;
 }
 
 @keyframes slide-right {
-  from {
-    opacity: 0;
-    transform: translateX(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
-
-.slide-right {
-  animation: slide-right 0.5s ease-out;
-}
-
+.slide-right { animation: slide-right 0.5s ease-out; }
 
 @keyframes slide-left {
-  from {
-    opacity: 0;
-    transform: translateX(-24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
+.slide-left { animation: slide-left 0.5s ease-out; }
 
-.slide-left {
-  animation: slide-left 0.5s ease-out;
-}
-
-
+/* ── Infinite logo scroll ── */
 @keyframes slide {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
 }
 
-
-.logos{
+.logos {
   overflow: hidden;
   padding: 60px 0;
 }
-
-.logos:hover .logo-slide{
+.logos:hover .logo-slide {
   animation-play-state: paused !important;
 }
-
 .logos-slide {
   white-space: nowrap;
-  animation: 400s slide infinite linear
+  animation: 400s slide infinite linear;
 }
-
-.logo-slide img{
+.logo-slide img {
   height: 50px;
   margin: 0 20px;
 }
