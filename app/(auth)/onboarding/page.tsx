@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import AccountType from './Includes/AccountType';
 import SignUp from './Includes/SignUp';
 import Verification from './Includes/Verification';
@@ -33,4 +33,10 @@ function Onboarding() {
     </section>
 }
 
-export default Onboarding
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Onboarding />
+    </Suspense>
+  );
+}
