@@ -9,51 +9,72 @@ import {
     Dialog,
     DialogContent,
     DialogTitle,
-  } from "@/components/ui/dialog"
+} from "@/components/ui/dialog"
 import useMain from '@/app/hooks/useMain';
 import routes from '@/lib/routes';
 
-type TabType = 'Generate Reports'|'Activity Logs'
-const tabs = ['Generate Reports','Activity Logs']
+// Prevent static prerendering — fixes workUnitAsyncStorage error from useSearchParams() in useMain
+export const dynamic = 'force-dynamic';
+
+type TabType = 'Generate Reports' | 'Activity Logs'
+const tabs = ['Generate Reports', 'Activity Logs']
 
 function FinanaceReportLogs() {
-    const {searchParams, router} = useMain();
+    const { searchParams, router } = useMain();
+
+    // Read tab from URL query param, default to 'Generate Reports'
     const tab = searchParams.get('tab') as TabType || 'Generate Reports';
     const [activeTab, setActiveTab] = useState<TabType>(tab);
-    useEffect(()=>setActiveTab(tab),[tab]);
+
+    // Sync active tab when URL param changes
+    useEffect(() => setActiveTab(tab), [tab]);
 
     return <PageWrapper content={<>
+
+        {/* Top Tab Navigation + Search/Filter */}
         <section className="border-b flex items-end justify-between">
             <div className="flex">
-                {
-                    tabs.map((tab, idx)=>{
-                        return <button onClick={()=>router.push(routes.finance.report+`?tab=${tab}`)} key={`tab-${idx}`} className={`px-4 pb-3 ${tab === activeTab && 'border-b-2 border-primary '}`}>{tab}</button>
-                    })
-                }
+                {tabs.map((tab, idx) => (
+                    <button
+                        onClick={() => router.push(routes.finance.report + `?tab=${tab}`)}
+                        key={`tab-${idx}`}
+                        className={`px-4 pb-3 ${tab === activeTab && 'border-b-2 border-primary'}`}
+                    >
+                        {tab}
+                    </button>
+                ))}
             </div>
             <div className="flex gap-3 py-2">
+                {/* Search Input */}
                 <aside className="rounded-lg w-[300px] px-2 h-9 border flex items-center gap-2">
-                <Search className='size-5'/>
-                <input type="text" placeholder='Search...' className="border-none outline-none text-sm w-full h-full" />
+                    <Search className='size-5' />
+                    <input
+                        type="text"
+                        placeholder='Search...'
+                        className="border-none outline-none text-sm w-full h-full"
+                    />
                 </aside>
+                {/* Filter Popover */}
                 <Popover>
-                <PopoverTrigger asChild>
-                    <Button variant="outline" className='flex items-center gap-3 h-9 rounded'>
-                        <Filter className='size-4'/>
-                        Filter
-                        <ChevronDown className='size-5'/>
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent side={'bottom'} className="w-[650px] text-[14px] flex flex-col gap-3 mr-12 rounded-xl px-6">
-
-                </PopoverContent>
+                    <PopoverTrigger asChild>
+                        <Button variant="outline" className='flex items-center gap-3 h-9 rounded'>
+                            <Filter className='size-4' />
+                            Filter
+                            <ChevronDown className='size-5' />
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent side={'bottom'} className="w-[650px] text-[14px] flex flex-col gap-3 mr-12 rounded-xl px-6">
+                        {/* Filter options can go here */}
+                    </PopoverContent>
                 </Popover>
             </div>
         </section>
 
+        {/* Tab Content */}
         <section className="w-full overflow-x-auto">
-            {
-                activeTab === 'Generate Reports' ? 
+            {activeTab === 'Generate Reports' ? (
+
+                /* Generate Reports Table */
                 <table className="w-full text-left text-sm">
                     <thead>
                         <tr className='h-10 bg-gray-100'>
@@ -63,20 +84,28 @@ function FinanaceReportLogs() {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            [1,2,3,4,5,6].map((tran, idx, arr)=>{
-                                return <tr key={`tran1-${idx}`} className={`${idx !== arr.length-1 && 'border-b'}`}>
-                                    <td><div className="p-3">Revenue Report</div></td>
-                                    <td><div className="p-3">Comprehensive revenue analysis and trends</div></td>
-                                    <td><div className="p-3 flex gap-3">
-                                        <Button variant={'outline'} className='rounded border-red-600 text-red-600 h-8 '><Download className='size-4'/> PDF</Button>
-                                        <Button variant={'outline'} className='rounded border-primary text-primary h-8 '><Download className='size-4'/> CSV</Button>
-                                    </div></td>
-                                </tr>
-                            })
-                        }
+                        {[1, 2, 3, 4, 5, 6].map((_, idx, arr) => (
+                            <tr key={`tran1-${idx}`} className={`${idx !== arr.length - 1 && 'border-b'}`}>
+                                <td><div className="p-3">Revenue Report</div></td>
+                                <td><div className="p-3">Comprehensive revenue analysis and trends</div></td>
+                                <td>
+                                    <div className="p-3 flex gap-3">
+                                        <Button variant={'outline'} className='rounded border-red-600 text-red-600 h-8'>
+                                            <Download className='size-4' /> PDF
+                                        </Button>
+                                        <Button variant={'outline'} className='rounded border-primary text-primary h-8'>
+                                            <Download className='size-4' /> CSV
+                                        </Button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
-                </table> : 
+                </table>
+
+            ) : (
+
+                /* Activity Logs Table */
                 <table className="w-full text-left text-sm">
                     <thead>
                         <tr className='h-10 bg-gray-100'>
@@ -85,20 +114,19 @@ function FinanaceReportLogs() {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            [1,2,3,4,5,6].map((tran, idx, arr)=>{
-                                return <tr key={`tran-${idx}`} className={`${idx !== arr.length-1 && 'border-b'}`}>
-                                    <td><div className="p-3">2025-06-03    10:30 AM</div></td>
-                                    <td><div className="p-3">Revenue report generated by John Doe</div></td>
-                                </tr>
-                            })
-                        }
+                        {[1, 2, 3, 4, 5, 6].map((_, idx, arr) => (
+                            <tr key={`tran-${idx}`} className={`${idx !== arr.length - 1 && 'border-b'}`}>
+                                <td><div className="p-3">2025-06-03 &nbsp; 10:30 AM</div></td>
+                                <td><div className="p-3">Revenue report generated by John Doe</div></td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
-            }
+
+            )}
         </section>
 
-    </>}/>
+    </>} />
 }
 
-export default FinanaceReportLogs
+export default FinanaceReportLogs;

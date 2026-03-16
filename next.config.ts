@@ -1,7 +1,7 @@
-import type { NextConfig } from 'next'
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    /* Turbopack handles development now */
-}
+  // No turbopack key needed — it's not a valid top-level config option
+};
 
-export default nextConfig
+export default nextConfig;
