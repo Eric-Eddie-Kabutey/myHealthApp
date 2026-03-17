@@ -85,13 +85,13 @@ function CliniciansMenuContent() {
     };
 
     return (
-        <div className="w-full grid grid-cols-4" style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}>
+        <div className="w-full grid grid-cols-1 md:grid-cols-4" style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}>
 
             {/* ── COL 1: Our Team ── */}
             <section
                 ref={col1Ref}
-                className="relative py-5 bg-white border-r border-gray-100"
-                style={{ boxShadow: '6px 0 20px -5px rgba(0,0,0,0.12)', zIndex: 1 }}
+                className="relative py-5 bg-white border-b md:border-b-0 md:border-r border-gray-100 shadow-sm md:shadow-[6px_0_20px_-5px_rgba(0,0,0,0.12)]"
+                style={{ zIndex: 1 }}
                 onMouseMove={handleMouseMove}
             >
                 <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-2 px-4">
@@ -104,6 +104,7 @@ function CliniciansMenuContent() {
                         <button
                             key={item.name}
                             onMouseEnter={() => setActive(item.name)}
+                            onClick={() => setActive(item.name)}
                             className="w-full text-left flex items-center transition-all duration-100"
                             style={{
                                 padding:    isActive ? '11px 16px' : '9px 16px',
@@ -140,6 +141,7 @@ function CliniciansMenuContent() {
                     width="11"
                     height="18"
                     aria-hidden="true"
+                    className="hidden md:block"
                     style={{
                         position:      'absolute',
                         right:         -5,
@@ -155,7 +157,7 @@ function CliniciansMenuContent() {
             </section>
 
             {/* ── COL 2: Who We Are ── */}
-            <section className="py-5 px-6 bg-white">
+            <section className="py-5 px-6 bg-white border-b md:border-b-0 border-gray-100">
                 <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-3">
                     Who We Are
                 </p>

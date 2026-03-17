@@ -112,13 +112,13 @@ function OrganisationMenuContent() {
     };
 
     return (
-        <div className="w-full grid grid-cols-4" style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}>
+        <div className="w-full grid grid-cols-1 md:grid-cols-4" style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}>
 
             {/* ── COL 1: Partners ── */}
             <section
                 ref={col1Ref}
-                className="relative py-5 bg-white border-r border-gray-100"
-                style={{ boxShadow: '6px 0 20px -5px rgba(0,0,0,0.12)', zIndex: 1 }}
+                className="relative py-5 bg-white border-b md:border-b-0 md:border-r border-gray-100 shadow-sm md:shadow-[6px_0_20px_-5px_rgba(0,0,0,0.12)]"
+                style={{ zIndex: 1 }}
                 onMouseMove={handleMouseMove}
             >
                 <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-2 px-4">
@@ -131,6 +131,7 @@ function OrganisationMenuContent() {
                         <button
                             key={partner.name}
                             onMouseEnter={() => setActive(partner.name)}
+                            onClick={() => setActive(partner.name)}
                             className="w-full text-left flex items-center transition-all duration-100"
                             style={{
                                 // Taller padding when active for card-lift feel
@@ -178,6 +179,7 @@ function OrganisationMenuContent() {
                     width="11"
                     height="18"
                     aria-hidden="true"
+                    className="hidden md:block"
                     style={{
                         position:      'absolute',
                         right:         -5,
@@ -193,7 +195,7 @@ function OrganisationMenuContent() {
             </section>
 
             {/* ── COL 2: Solutions ── */}
-            <section className="py-5 px-6 bg-white">
+            <section className="py-5 px-6 bg-white border-b md:border-b-0 border-gray-100">
                 <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-3">
                     Solutions
                 </p>
@@ -244,7 +246,7 @@ function OrganisationMenuContent() {
             </section>
 
             {/* ── COL 4: Promo article card ── */}
-            <section className="flex flex-col overflow-hidden bg-white border-l border-gray-100">
+            <section className="flex flex-col overflow-hidden bg-white md:border-l border-gray-100">
                 <div
                     className="w-full h-44 bg-cover bg-center"
                     style={{ backgroundImage: `url(https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80)` }}

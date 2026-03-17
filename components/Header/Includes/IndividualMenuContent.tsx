@@ -1,10 +1,6 @@
 'use client';
 
-// File: components/Header/Includes/IndividualMenuContent.tsx
-// Active row: inset left border + box shadow card lift + triangle faces LEFT into col1
-// Triangle top tracks mouse position in real-time via triangleTop state
-
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 
 const GREEN     = '#34765A';
 const ACTIVE_BG = '#e8f5ee';
@@ -63,7 +59,7 @@ const items = [
         name: '24/7 Care',
         description: 'Skip the trip and get same-day care for common conditions.',
         services: [
-            { name: 'Overview',     link: '/247care',  external: false },
+            { name: 'Overview',     link: '/247care',   external: false },
             { name: 'Get Care Now', link: '/register', external: true  },
         ],
     },
@@ -104,8 +100,8 @@ const items = [
         name: 'Specialty & Wellness',
         description: "Skin issues? Meal planning? Or need a second opinion? We've got you covered.",
         services: [
-            { name: 'Overview',               link: '/specialty-wellness',                 external: false },
-            { name: 'Dermatology',            link: '/specialty-wellness/dermatology',     external: false },
+            { name: 'Overview',                link: '/specialty-wellness',                 external: false },
+            { name: 'Dermatology',             link: '/specialty-wellness/dermatology',     external: false },
             { name: 'Expert Medical Opinion', link: '/specialty-wellness/medical-experts', external: false },
             { name: 'BetterSleep — Try for $0', link: '/specialty-wellness/bettersleep',  external: true  },
         ],
@@ -131,7 +127,6 @@ const exploreItems = [
     { name: 'Contact Us',              link: '/contact' },
 ];
 
-// Small external link icon
 const ExtIcon = () => (
     <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ flexShrink: 0, color: '#9ca3af' }}>
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -142,36 +137,34 @@ const ExtIcon = () => (
 // ─── Component ────────────────────────────────────────────────────────────────
 function IndividualMenuContent() {
     const [active, setActive]           = useState('24/7 Care');
-    const [triangleTop, setTriangleTop] = useState(24);
-    const col1Ref = useRef<HTMLElement>(null);
+    const [triangleTop, setTriangleTop] = useState(62); // Initial center of first item
+    const col1Ref  = useRef<HTMLElement>(null);
+    const btnRefs  = useRef<Record<string, HTMLButtonElement | null>>({});
 
     const activeItem = items.find(i => i.name === active);
 
-    // Track mouse Y within the column for smooth triangle following
-    const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-        if (col1Ref.current) {
-            const colTop = col1Ref.current.getBoundingClientRect().top;
-            // Clamp triangle within column bounds
-            const raw = e.clientY - colTop;
-            const clamped = Math.max(16, Math.min(raw, col1Ref.current.offsetHeight - 16));
-            setTriangleTop(clamped);
-        }
-    };
-
-    const handleHover = (name: string) => {
+    // Snap triangle to vertical center of the hovered button
+    const handleHover = useCallback((name: string) => {
         setActive(name);
-    };
+        const btn = btnRefs.current[name];
+        const col = col1Ref.current;
+        if (btn && col) {
+            const colTop  = col.getBoundingClientRect().top;
+            const btnRect = btn.getBoundingClientRect();
+            // Center of the button relative to the column top
+            const center  = btnRect.top - colTop + btnRect.height / 2;
+            setTriangleTop(center);
+        }
+    }, []);
 
     return (
-        <div className="w-full grid grid-cols-4" style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}>
+        <div className="w-full grid grid-cols-1 md:grid-cols-4" style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}>
 
             {/* ── COL 1: Ways We Help ── */}
             <section
                 ref={col1Ref}
-                className="relative py-5 bg-white border-r border-gray-100"
-                style={{ boxShadow: '6px 0 20px -5px rgba(0,0,0,0.12)', zIndex: 1 }}
-                // Mouse move on the whole column keeps triangle following cursor
-                onMouseMove={handleMouseMove}
+                className="relative py-5 bg-white border-b md:border-b-0 md:border-r border-gray-100 shadow-sm md:shadow-[6px_0_20px_-5px_rgba(0,0,0,0.12)]"
+                style={{ zIndex: 1 }}
             >
                 <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-2 px-4">
                     Ways We Help
@@ -182,33 +175,29 @@ function IndividualMenuContent() {
                     return (
                         <button
                             key={item.name}
+                            ref={el => { btnRefs.current[item.name] = el; }} 
                             onMouseEnter={() => handleHover(item.name)}
-                            className="w-full text-left px-4 transition-all duration-100 flex items-center"
+                            onClick={() => handleHover(item.name)}
+                            className="w-full text-left flex items-center transition-all duration-100"
                             style={{
-                                // Active row is taller + has card-shadow lift
                                 padding:    isActive ? '11px 16px' : '9px 16px',
                                 background: isActive ? ACTIVE_BG  : 'transparent',
                                 color:      isActive ? GREEN      : '#14161a',
                                 fontSize:   '13.5px',
                                 fontWeight: 600,
-                                // Inset left green bar + right-side shadow bleed into col2
                                 boxShadow:  isActive
                                     ? 'inset 3px 0 0 #34765A, 4px 0 16px -2px rgba(52,118,90,0.22)'
                                     : 'none',
                             }}
                         >
-                            {/* Icon circle — deeper green when active */}
-                            <div
-                                style={{
-                                    width: 32, height: 32,
-                                    borderRadius: '50%',
-                                    background: isActive ? '#bbf7d0' : '#f0fdf4',
-                                    color:      isActive ? GREEN     : '#16a34a',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    marginRight: 12, flexShrink: 0,
-                                    transition: 'background 0.1s',
-                                }}
-                            >
+                            <div style={{
+                                width: 32, height: 32, borderRadius: '50%',
+                                background: isActive ? '#bbf7d0' : '#f0fdf4',
+                                color:      isActive ? GREEN     : '#16a34a',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                marginRight: 12, flexShrink: 0,
+                                transition: 'background 0.1s',
+                            }}>
                                 {icons[item.name]}
                             </div>
                             {item.name}
@@ -216,31 +205,26 @@ function IndividualMenuContent() {
                     );
                 })}
 
-                {/* ── Triangle pointer — faces LEFT (points into col2) ──
-                    Positioned on RIGHT edge of col1, tip pointing rightward.
-                    SVG path draws triangle open to the right. */}
+                {/* Triangle snaps to center of active row */}
                 <svg
-                    viewBox="0 0 10 18"
-                    width="11"
-                    height="18"
-                    aria-hidden="true"
+                    viewBox="0 0 10 18" width="11" height="18" aria-hidden="true"
+                    className="hidden md:block"
                     style={{
-                        position:       'absolute',
-                        right:          -5,          // overlays the border pointing LEFT
-                        top:            triangleTop - 9, 
-                        pointerEvents:  'none',
+                        position:      'absolute',
+                        right:          -5,
+                        top:            triangleTop - 9,
+                        pointerEvents: 'none',
                         zIndex:         10,
-                        transition:     'top 0.15s cubic-bezier(0.22, 1, 0.36, 1)',
-                        filter:         'drop-shadow(-2px 0 4px rgba(0,0,0,0.1))', // shadow on the left now
+                        transition:    'top 0.18s cubic-bezier(0.22, 1, 0.36, 1)',
+                        filter:        'drop-shadow(-2px 0 4px rgba(0,0,0,0.1))',
                     }}
                 >
-                    {/* Triangle points LEFT — pointing back into the list */}
                     <path d="M10 0 L0 9 L10 18 Z" fill={ACTIVE_BG} />
                 </svg>
             </section>
 
             {/* ── COL 2: Services ── */}
-            <section className="py-5 px-6 bg-white">
+            <section className="py-5 px-6 bg-white border-b md:border-b-0 border-gray-100">
                 <p className="text-[10px] font-bold tracking-[0.15em] text-gray-400 uppercase mb-3">
                     Services
                 </p>

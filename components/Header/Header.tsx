@@ -61,7 +61,7 @@ function Header() {
 
                         <Link
                             href={routes.login}
-                            className="flex items-center gap-2 text-[#14161a] font-medium text-[14px] transition-colors"
+                            className="hidden sm:flex items-center gap-2 text-[#14161a] font-medium text-[14px] transition-colors"
                             style={{ fontFamily: "'Raleway', system-ui, sans-serif" }}
                             onMouseEnter={e => (e.currentTarget.style.color = '#34765A')}
                             onMouseLeave={e => (e.currentTarget.style.color = '#14161a')}
