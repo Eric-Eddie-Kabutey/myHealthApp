@@ -8,6 +8,7 @@ import Hero from "@/components/Hero";
 import Link from "next/link";
 import { heroMedia } from "./leadership/heroMedia";
 import PageWrapper from "@/components/PageWrapper";
+import VideoCarousel from "@/components/VideoCarousel";
 
 
 export default function Home() {
@@ -34,20 +35,23 @@ export default function Home() {
       </section>
 
       <section className="w-full py-[2rem] flex flex-col items-center">
-        <div className="w-full xl:w-[1200px] flex lg:justify-center gap-10 overflow-x-auto">
-          <aside className="min-w-[300px] sm:w-[350px] group rounded-[2rem] bg-white shadow border-t flex flex-col justify-end relative h-[350px] md:h-[450px] overflow-hidden">
-            <img src="https://www.shutterstock.com/image-photo/doctors-talking-operation-600nw-2451099677.jpg" alt="clinicians" className="w-full h-[200px] object-cover group-hover:scale-105 transition-all duration-300" />
-            <div className="absolute cursor-pointer size-full top-0 left-0 p-4 sm:p-7 sm:py-12 pb-7 flex flex-col justify-between transition-all duration-300">
-              <div className="flex flex-col gap-2">
-                <b className="text-base sm:text-lg text-purple-900 flex items-center gap-2"><div className="size-2 rounded-full bg-black" />For Clinicians</b>
-                <p className="text-slate-700 text-[1.5rem] sm:text-[2rem] leading-[1.7rem] sm:leading-[2.3rem] font-bold">Exceptional Care Begins with RiciaCare</p>
-              </div>
-              <Button variant={'outline'} className="px-[1rem] rounded-[2rem] w-fit h-10 mt-2 text-black bg-white transition-all duration-500 border-2 border-white group flex items-center gap-2">
-                <div className="size-[0.4rem] bg-black rounded-full animate-ping transition-all duration-300" />
-                Join the team
-              </Button>
-            </div>
-          </aside>
+  {/* Added px-6 for mobile breathing room and snap-x for better feel */}
+  <div className="w-full xl:w-[1200px] flex lg:justify-center gap-10 overflow-x-auto px-6 snap-x snap-mandatory">
+    
+    {/* Added snap-center to the asides */}
+    <aside className="snap-center min-w-[300px] sm:w-[350px] group rounded-[2rem] bg-white shadow border-t flex flex-col justify-end relative h-[350px] md:h-[450px] overflow-hidden">
+      <img src="https://www.shutterstock.com/image-photo/doctors-talking-operation-600nw-2451099677.jpg" alt="clinicians" className="w-full h-[200px] object-cover group-hover:scale-105 transition-all duration-300" />
+      <div className="absolute cursor-pointer size-full top-0 left-0 p-4 sm:p-7 sm:py-12 pb-7 flex flex-col justify-between transition-all duration-300">
+        <div className="flex flex-col gap-2">
+          <b className="text-base sm:text-lg text-purple-900 flex items-center gap-2"><div className="size-2 rounded-full bg-black" />For Clinicians</b>
+          <p className="text-slate-700 text-[1.5rem] sm:text-[2rem] leading-[1.7rem] sm:leading-[2.3rem] font-bold">Exceptional Care Begins with RiciaCare</p>
+        </div>
+        <Button variant={'outline'} className="px-[1rem] rounded-[2rem] w-fit h-10 mt-2 text-black bg-white transition-all duration-500 border-2 border-white group flex items-center gap-2">
+          <div className="size-[0.4rem] bg-black rounded-full animate-ping transition-all duration-300" />
+          Join the team
+        </Button>
+      </div>
+    </aside>
           <aside className="min-w-[300px] sm:w-[350px] group rounded-[2rem] bg-white shadow border-t flex flex-col justify-end relative h-[350px] md:h-[450px] overflow-hidden">
             <img src="https://media.istockphoto.com/id/1276732125/photo/african-american-video-conferencing-with-doctor.jpg?s=612x612&w=0&k=20&c=d-NzHONUc7RDxhkEOWEcxQcTdLzL7wCsUCMutjrlco4=" alt="clinicians" className="w-full h-[200px] object-cover group-hover:scale-105 transition-all duration-300" />
             <div className="absolute cursor-pointer size-full top-0 left-0 p-4 sm:p-7 sm:py-12 pb-7 flex flex-col justify-between transition-all duration-300">
@@ -76,6 +80,17 @@ export default function Home() {
           </aside>
         </div>
       </section>
+
+     {/* Centered CTA button below the three service cards */}
+<div className="w-full flex justify-center mt-8 mb-12">
+  <Link href="/services">
+    <Button className="h-12 px-[3rem] rounded-full bg-black text-white hover:bg-gray-800 transition-all duration-300 flex items-center gap-2">
+      <div className="size-[0.4rem] bg-white rounded-full animate-ping" />
+      Explore the Care You Need
+    </Button>
+  </Link>
+</div>
+    <VideoCarousel />
 
       <section className="w-full flex flex-col items-center py-[4rem]">
         <div className="xl:w-[1200px] flex flex-col items-center text-center">

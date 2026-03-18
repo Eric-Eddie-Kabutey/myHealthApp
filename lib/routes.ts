@@ -1,6 +1,7 @@
 const routes = {
     home: `/`,
     about: `/about`,
+    services: `/services`,
     leadership: {
         index: `/leadership`,
         clinicals: `/leadership/clinicals`,

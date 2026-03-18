@@ -1,10 +1,5 @@
 'use client';
 
-// File: components/Header/Header.tsx
-// The white header bar is constrained to max-w-[1200px] and centered.
-// The outer wrapper is transparent — no full-width white background.
-// Layout: [LEFT: Register + Sign in] [RIGHT: Nav + Logo]
-
 import React, { useRef } from 'react'
 import { Button } from '../ui/button'
 import Link from 'next/link';
@@ -94,6 +89,18 @@ function Header() {
                                     {menu}
                                 </button>
                             ))}
+
+                            {/* Services link */}
+                            <Link 
+                                href={routes.services} 
+                                className="h-full px-4 lg:px-5 font-semibold text-[14px] flex items-center transition-colors duration-150 hover:text-[#34765A]"
+                                style={{
+                                    fontFamily: "'Raleway', system-ui, sans-serif",
+                                    color: '#14161a',
+                                }}
+                            >
+                                Services
+                            </Link>
 
                             {/* Green animated underline */}
                             <span
